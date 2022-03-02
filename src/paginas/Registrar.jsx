@@ -34,7 +34,7 @@ const Registrar = () => {
     }
     //Crear el usuario en la API
     try {
-      const { data } = await axios.post("http://localhost:4000/api/usuarios", {
+      const { data } = await axios.post( "api/usuarios", {
         nombre,
         email,
         password,
@@ -43,6 +43,10 @@ const Registrar = () => {
         msg: data.msg,
         error: false,
       });
+      setNombre("");
+      setEmail("");
+      setPassword("");
+      setRepetirPassword("");
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
