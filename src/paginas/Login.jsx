@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
 import clienteAxios from "../config/clienteAxios";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +24,7 @@ const Login = () => {
         email,
         password,
       });
+      // console.log(setAuth);
       localStorage.setItem("token", respuesta.data.token);
       setAlerta({});
     } catch (error) {
