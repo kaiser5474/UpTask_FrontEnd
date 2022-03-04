@@ -7,7 +7,8 @@ import OlvidePassword from "./paginas/OlvidePassword";
 import Registrar from "./paginas/Registrar";
 import { AuthProvider } from "./context/AuthProvider";
 import RutaProtegida from "./layouts/RutaProtegida";
-import Proyectos from "./paginas/Proyectos";
+import Proyectos from "./paginas/proyectos/Proyectos";
+import NuevoProyecto from "./paginas/proyectos/NuevoProyecto";
 function App() {
   return (
     <BrowserRouter>
@@ -22,7 +23,7 @@ function App() {
           </Route>
           <Route path="/proyectos" element={<RutaProtegida />}>
             <Route index element={<Proyectos />} />
-            <Route index element={<Proyectos />} />
+            <Route path="crear-proyecto" element={<NuevoProyecto />} />
             <Route index element={<Proyectos />} />
             <Route index element={<Proyectos />} />
             <Route index element={<Proyectos />} />
