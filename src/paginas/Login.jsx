@@ -8,6 +8,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
+  //const { auth, setAuth, cargando } = useAuth();
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,14 +26,15 @@ const Login = () => {
         email,
         password,
       });
-      // console.log(setAuth);
       localStorage.setItem("token", respuesta.data.token);
       setAlerta({});
+      navigate("/proyectos");
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
         error: true,
       });
+      return;
     }
   };
   return (
