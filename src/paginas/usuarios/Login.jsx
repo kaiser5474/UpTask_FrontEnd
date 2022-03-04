@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Alerta from "../components/Alerta";
-import clienteAxios from "../config/clienteAxios";
-import useAuth from "../hooks/useAuth";
+import Alerta from "../../components/Alerta";
+import clienteAxios from "../../config/clienteAxios";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
-  //const { auth, setAuth, cargando } = useAuth();
   let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
