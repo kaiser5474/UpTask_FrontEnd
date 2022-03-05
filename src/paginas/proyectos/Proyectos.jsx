@@ -10,10 +10,12 @@ const Proyectos = () => {
       <div className="bg-white shadow m-10 rounded-lg">
         {proyectos.length > 0 ? (
           proyectos.map((proyecto) => {
-            return <PreviewProyecto proyecto={proyecto} key={proyecto._id}/>;
+            return <PreviewProyecto proyecto={proyecto} key={proyecto._id} />;
           })
         ) : (
-          <p className='uppercase p-5 text-gray-600 text-center'>No hay proyectos aún, crea uno.</p>
+          <p className="uppercase p-5 text-gray-600 text-center">
+            No hay proyectos aún, crea uno.
+          </p>
         )}
       </div>
     </>

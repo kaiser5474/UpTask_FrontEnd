@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import clienteAxios from "../config/clienteAxios";
+import useAuth from "../hooks/useAuth";
 
 const ProyectosContext = createContext();
 
@@ -11,19 +12,22 @@ const ProyectosProvider = ({ children }) => {
   const [alertaProyecto, setAlertaProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
+  const { auth } = useAuth();
 
-  //useEffect
   useEffect(() => {
     const selectProyectos = async () => {
-      setProyectos([]);
       try {
-        if (!token) return;
-        const { data } = await clienteAxios("/proyectos", { headers });
+        const token = localStorage.getItem("token");
+        if (!token) {
+          return;
+        }
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const { data } = await clienteAxios("/proyectos", config);
         setProyectos(data.listadoProyectos);
       } catch (error) {
         setAlertaProyecto({
@@ -33,15 +37,22 @@ const ProyectosProvider = ({ children }) => {
       }
     };
     selectProyectos();
-  }, []);
+  }, [auth]);
 
   //funciones
   const createProyecto = async (proyecto) => {
     try {
-      if (!token) return;
-      const { data } = await clienteAxios.post("/proyectos", proyecto, {
-        headers,
-      });
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.post("/proyectos", proyecto, config);
 
       setProyectos([...proyectos, data.proyectoAlmadenado]);
       setAlertaProyecto({
@@ -52,7 +63,7 @@ const ProyectosProvider = ({ children }) => {
       setTimeout(() => {
         setAlertaProyecto({});
         navigate("/proyectos");
-      }, 5000);
+      }, 2000);
     } catch (error) {
       setAlertaProyecto({
         msg: error.response.data.msg,
@@ -64,9 +75,17 @@ const ProyectosProvider = ({ children }) => {
   const selectProyecto = async (id) => {
     setCargando(true);
     try {
-      if (!token) return;
-      const { data } = await clienteAxios(`/proyectos/${id}`, { headers });
-      console.log(data);
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data.proyecto);
     } catch (error) {
       setAlertaProyecto({
@@ -76,6 +95,11 @@ const ProyectosProvider = ({ children }) => {
     } finally {
       setCargando(false);
     }
+  };
+
+  const cerrarSesionProyectos = () => {
+    setProyectos([]);
+    setProyecto({});
   };
 
   return (
@@ -89,6 +113,7 @@ const ProyectosProvider = ({ children }) => {
         setAlertaProyecto,
         createProyecto,
         selectProyecto,
+        cerrarSesionProyectos,
       }}
     >
       {children}
