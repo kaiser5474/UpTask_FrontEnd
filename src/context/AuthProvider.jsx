@@ -6,13 +6,13 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
-  const [cargando, setCargando] = useState(true);
+  const [cargando, setCargando] = useState(false);
+  const token = localStorage.getItem("token");
   let navigate = useNavigate();
+
   useEffect(() => {
     const autenticarUsuario = async () => {
-      const token =
-        //localStorage.getItem("token") || sessionStorage.getItem("token");
-        localStorage.getItem("token");
+      setCargando(true);
       if (!token) {
         setCargando(false);
         return;
@@ -26,15 +26,23 @@ const AuthProvider = ({ children }) => {
       try {
         const respuesta = await clienteAxios(`/usuarios/perfil`, config);
         setAuth(respuesta.data);
-        navigate("/proyectos");
+        //navigate("/proyectos");
       } catch (error) {
         console.log(error.response.data.msg);
-        setAuth({});
+        //setAuth({});
+      } finally {
+        setCargando(false);
       }
-      setCargando(false);
     };
     autenticarUsuario();
   }, []);
+
+  const cerrarSesion = () => {
+    setAuth({});
+    setCargando(false);
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <AuthContext.Provider
@@ -42,6 +50,7 @@ const AuthProvider = ({ children }) => {
         auth,
         cargando,
         setAuth,
+        cerrarSesion,
       }}
     >
       {children}

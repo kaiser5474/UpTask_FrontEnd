@@ -1,13 +1,21 @@
 import React from "react";
+import PreviewProyecto from "../../components/PreviewProyecto";
 import useProyectos from "../../hooks/useProyectos";
 
 const Proyectos = () => {
   const { proyectos } = useProyectos();
-  console.log(proyectos );
   return (
     <>
       <h1 className="font-black text-4xl">Proyectos</h1>
-      <div></div>
+      <div className="bg-white shadow m-10 rounded-lg">
+        {proyectos.length > 0 ? (
+          proyectos.map((proyecto) => {
+            return <PreviewProyecto proyecto={proyecto} key={proyecto._id}/>;
+          })
+        ) : (
+          <p className='uppercase p-5 text-gray-600 text-center'>No hay proyectos aún, crea uno.</p>
+        )}
+      </div>
     </>
   );
 };

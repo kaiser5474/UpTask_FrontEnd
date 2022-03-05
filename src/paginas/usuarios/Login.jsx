@@ -12,9 +12,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toValidate = [email.trim(), password.trim()];
 
-    if (toValidate.includes("")) {
+    if ([email, password].includes("")) {
       return setAlerta({
         msg: "Todos los campos son obligatorios",
         error: true,

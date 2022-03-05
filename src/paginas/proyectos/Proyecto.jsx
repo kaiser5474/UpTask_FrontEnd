@@ -1,10 +1,17 @@
-import { Outlet, Navigate } from "react-router-dom";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import useAuth from "../hooks/useAuth";
+import React, { useEffect } from "react";
+import useProyectos from "../../hooks/useProyectos";
+import { useNavigate, useParams } from "react-router-dom";
 
-const RutaProtegida = () => {
-  const { auth, cargando } = useAuth();
+const Proyecto = () => {
+  const { proyecto, selectProyecto, cargando } = useProyectos();
+  const { id } = useParams();
+
+  useEffect(() => {
+    selectProyecto(id);
+  }, []);
+
+  const { nombre } = proyecto;
+
   return cargando ? (
     <div class="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
       <div class="animate-pulse flex space-x-4">
@@ -21,19 +28,11 @@ const RutaProtegida = () => {
         </div>
       </div>
     </div>
-  ) : auth._id ? (
-    <div className="bg-gray-100">
-      <Header />
-      <div className="md:flex md:min-h-screen">
-        <Sidebar />
-        <main className="p-10 flex-1">
-          <Outlet />
-        </main>
-      </div>
-    </div>
   ) : (
-    <Navigate to="/" />
+    <div className="bg-white p-5">
+      <h1 className="font-black text-4xl">{nombre}</h1>
+    </div>
   );
 };
 
-export default RutaProtegida;
+export default Proyecto;
