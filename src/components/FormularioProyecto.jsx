@@ -1,20 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import Alerta from "./Alerta";
 
 const FormularioProyecto = () => {
-  const { alertaProyecto, setAlertaProyecto, createProyecto } =
-    useProyectos();
+  const {
+    proyecto,
+    alertaProyecto,
+    setAlertaProyecto,
+    createProyecto,
+    updateProyecto,
+  } = useProyectos();
+
+  const params = useParams();
   //hooks
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [fecha, setFecha] = useState("");
+  const [fechaEntrega, setFechaEntrega] = useState("");
   const [cliente, setCliente] = useState("");
 
-  //funciones
+  useEffect(() => {
+    if (typeof params.id !== "undefined" || params.id) {
+      setNombre(proyecto.nombre);
+      setDescripcion(proyecto.descripcion);
+      setFechaEntrega(proyecto.fechaEntrega?.split("T")[0]);
+      setCliente(proyecto.cliente);
+    } else {
+      setNombre("");
+      setDescripcion("");
+      setFechaEntrega("");
+      setCliente("");
+    }
+  }, [params]);
+
+  //funciones del CRUD
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if ([nombre, descripcion, fecha, cliente].includes("")) {
+    if ([nombre, descripcion, fechaEntrega, cliente].includes("")) {
       return setAlertaProyecto({
         msg: "Todos los campos son obligatorios",
         error: true,
@@ -23,24 +45,46 @@ const FormularioProyecto = () => {
     await createProyecto({
       nombre,
       descripcion,
-      fecha,
+      fechaEntrega,
       cliente,
     });
     //Limpiando el formulario
     setNombre("");
     setCliente("");
     setDescripcion("");
-    setFecha("");
+    setFechaEntrega("");
   };
+
+  const handleSubmitUpdate = async (e) => {
+    e.preventDefault();
+    if ([nombre, descripcion, fechaEntrega, cliente].includes("")) {
+      return setAlertaProyecto({
+        msg: "Todos los campos son obligatorios",
+        error: true,
+      });
+    }
+    await updateProyecto({
+      _id: proyecto._id,
+      nombre,
+      descripcion,
+      fechaEntrega,
+      cliente,
+    });
+  };
+
   return (
     <>
-      <div className="lg:w-3/4">
-        {alertaProyecto.msg && <Alerta alerta={alertaProyecto} />}
-      </div>
       <form
-        className="mt-5 bg-white px-5 py-10 rounded-md lg:w-3/4"
-        onSubmit={handleSubmit}
+        className="mt-4 bg-white px-5 py-6 rounded-md lg:w-3/4"
+        onSubmit={
+          typeof params.id !== "undefined" || params.id
+            ? handleSubmitUpdate
+            : handleSubmit
+        }
       >
+        <div className="mb-10">
+          {alertaProyecto.msg && <Alerta alerta={alertaProyecto} />}
+        </div>
         <div>
           <label className="uppercase font-bold text-gray-700" htmlFor="nombre">
             Nombre Proyecto
@@ -77,8 +121,8 @@ const FormularioProyecto = () => {
             type="date"
             id="fecha"
             className="bg-gray-50 w-full p-2 mt-2 mb-2 border-2"
-            value={fecha}
-            onChange={(e) => setFecha(e.target.value)}
+            value={fechaEntrega}
+            onChange={(e) => setFechaEntrega(e.target.value)}
           />
         </div>
         <div>
@@ -99,7 +143,11 @@ const FormularioProyecto = () => {
         </div>
         <input
           type="submit"
-          value="Crear Proyecto"
+          value={
+            typeof params.id !== "undefined" || params.id
+              ? "Actualizar Proyecto"
+              : "Crear Proyecto"
+          }
           className="w-full p-2 bg-sky-600 mt-4 text-white font-bold uppercase rounded-md cursor-pointer hover:bg-sky-700 transition-colors"
         />
       </form>

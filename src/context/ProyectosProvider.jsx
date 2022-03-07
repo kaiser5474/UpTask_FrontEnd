@@ -54,7 +54,7 @@ const ProyectosProvider = ({ children }) => {
       };
       const { data } = await clienteAxios.post("/proyectos", proyecto, config);
 
-      setProyectos([...proyectos, data.proyectoAlmadenado]);
+      setProyectos([...proyectos, data.proyectoAlmacenado]);
       setAlertaProyecto({
         msg: data.msg,
         error: false,
@@ -63,7 +63,7 @@ const ProyectosProvider = ({ children }) => {
       setTimeout(() => {
         setAlertaProyecto({});
         navigate("/proyectos");
-      }, 2000);
+      }, 2500);
     } catch (error) {
       setAlertaProyecto({
         msg: error.response.data.msg,
@@ -97,6 +97,78 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const updateProyecto = async (proyecto) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.put(
+        `/proyectos/${proyecto}`,
+        proyecto,
+        config
+      );
+      const proyectosActualizados = proyectos.map((proyectoIter) =>
+        proyectoIter._id === proyecto._id ? proyecto : proyectoIter
+      );
+      setProyectos(proyectosActualizados);
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+
+      setTimeout(() => {
+        setAlertaProyecto({});
+        navigate("/proyectos");
+      }, 2500);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    }
+  };
+
+  const deleteProyecto = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios.delete(`/proyectos/${id}`, config);
+      const proyectosActualizados = proyectos.filter((proyectoIter) =>
+        proyectoIter._id !== id ? proyectoIter : null
+      );
+      setProyectos(proyectosActualizados);
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+
+      setTimeout(() => {
+        setAlertaProyecto({});
+        navigate("/proyectos");
+      }, 2500);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    }
+  };
+
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
@@ -114,6 +186,8 @@ const ProyectosProvider = ({ children }) => {
         createProyecto,
         selectProyecto,
         cerrarSesionProyectos,
+        updateProyecto,
+        deleteProyecto,
       }}
     >
       {children}

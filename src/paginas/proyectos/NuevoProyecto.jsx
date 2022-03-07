@@ -5,7 +5,9 @@ const NuevoProyecto = () => {
   return (
     <>
       <h1 className="font-black text-4xl">Crear Proyecto</h1>
-      <FormularioProyecto />
+      <div className="mt-10 flex justify-center">
+        <FormularioProyecto />
+      </div>
     </>
   );
 };
