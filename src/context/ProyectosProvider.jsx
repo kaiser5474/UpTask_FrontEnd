@@ -11,6 +11,7 @@ const ProyectosProvider = ({ children }) => {
   const [proyecto, setProyecto] = useState({});
   const [alertaProyecto, setAlertaProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
+  const [mostrarModalConfirm, setMostrarModalConfirm] = useState(false);
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -181,6 +182,7 @@ const ProyectosProvider = ({ children }) => {
         proyectos,
         alertaProyecto,
         cargando,
+        mostrarModalConfirm,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -188,6 +190,7 @@ const ProyectosProvider = ({ children }) => {
         cerrarSesionProyectos,
         updateProyecto,
         deleteProyecto,
+        setMostrarModalConfirm,
       }}
     >
       {children}

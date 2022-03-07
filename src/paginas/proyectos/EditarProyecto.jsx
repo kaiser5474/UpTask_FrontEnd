@@ -1,10 +1,18 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import FormularioProyecto from "../../components/FormularioProyecto";
+import ModalConfirm from "../../components/ModalConfirm";
 import useProyectos from "../../hooks/useProyectos";
 
 const EditarProyecto = () => {
-  const { proyecto, selectProyecto, cargando, deleteProyecto } = useProyectos();
+  const {
+    mostrarModalConfirm,
+    proyecto,
+    selectProyecto,
+    cargando,
+    deleteProyecto,
+    setMostrarModalConfirm,
+  } = useProyectos();
   const { id } = useParams();
 
   useEffect(() => {
@@ -14,9 +22,10 @@ const EditarProyecto = () => {
   const { nombre } = proyecto;
 
   const handleClick = () => {
-    if (confirm("Deseas eliminar este proyecto?")) {
-      deleteProyecto(proyecto._id);
-    }
+    setMostrarModalConfirm(true);
+    // if (confirm("Deseas eliminar este proyecto?")) {
+    //   deleteProyecto(proyecto._id);
+    // }
   };
 
   return cargando ? (
@@ -63,6 +72,7 @@ const EditarProyecto = () => {
       <div className="mt-10 flex justify-center">
         <FormularioProyecto />
       </div>
+      {mostrarModalConfirm && <ModalConfirm text={"¿Deseas eliminar este proyecto?"}/>}
     </>
   );
 };
