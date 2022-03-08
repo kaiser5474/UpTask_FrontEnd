@@ -10,7 +10,6 @@ const EditarProyecto = () => {
     proyecto,
     selectProyecto,
     cargando,
-    deleteProyecto,
     setMostrarModalConfirm,
   } = useProyectos();
   const { id } = useParams();
@@ -23,9 +22,6 @@ const EditarProyecto = () => {
 
   const handleClick = () => {
     setMostrarModalConfirm(true);
-    // if (confirm("Deseas eliminar este proyecto?")) {
-    //   deleteProyecto(proyecto._id);
-    // }
   };
 
   return cargando ? (

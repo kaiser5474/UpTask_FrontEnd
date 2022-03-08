@@ -1,18 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useProyectos from "../../hooks/useProyectos";
 import { Link, useParams } from "react-router-dom";
+import ModalFormularioTareas from "../../components/ModalFormularioTarea";
+import Tarea from "../../components/Tarea";
 
 const Proyecto = () => {
-  const { proyecto, selectProyecto, cargando } = useProyectos();
+  const {
+    proyecto,
+    selectProyecto,
+    cargando,
+    cargandoTarea,
+    handleModalTarea,
+    selectTareasByProyecto,
+    tareas,
+  } = useProyectos();
   const { id } = useParams();
 
   useEffect(() => {
     selectProyecto(id);
+    selectTareasByProyecto(id);
   }, []);
 
   const { nombre } = proyecto;
+  console.log(tareas);
 
-  return cargando ? (
+  return cargando && cargandoTarea ? (
     <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-full bg-slate-200 h-10 w-10"></div>
@@ -56,6 +68,7 @@ const Proyecto = () => {
       <button
         type="button"
         className="flex gap-2 items-center justify-center text-sm px-5 py-3 mt-5 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-400 text-white "
+        onClick={handleModalTarea}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -73,6 +86,17 @@ const Proyecto = () => {
         </svg>
         Nueva Tarea
       </button>
+      <p className="font-bold text-xl mt-10">Tareas del proyecto </p>
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {tareas?.length > 0 ? (
+          tareas.map((tarea) => <Tarea key={tarea._id} tarea={tarea} />)
+        ) : (
+          <p className="text-center my-5 p-10">
+            No hay tareas en este proyecto
+          </p>
+        )}
+      </div>
+      <ModalFormularioTareas />
     </>
   );
 };

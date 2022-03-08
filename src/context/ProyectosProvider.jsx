@@ -11,7 +11,11 @@ const ProyectosProvider = ({ children }) => {
   const [proyecto, setProyecto] = useState({});
   const [alertaProyecto, setAlertaProyecto] = useState({});
   const [cargando, setCargando] = useState(false);
+  const [cargandoTarea, setCargandoTarea] = useState(false);
   const [mostrarModalConfirm, setMostrarModalConfirm] = useState(false);
+  const [mostrarModalFormularioTarea, setMostrarModalFormularioTarea] =
+    useState(false);
+  const [tareas, setTareas] = useState([]);
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -170,6 +174,60 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const selectTareasByProyecto = async (id) => {
+    setCargandoTarea(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return;
+      }
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios(`/tareas/proyecto/${id}`, config);
+      setTareas(data.tareas);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setCargandoTarea(false);
+    }
+  };
+
+  const handleModalTarea = () => {
+    setMostrarModalFormularioTarea(!mostrarModalFormularioTarea);
+  };
+
+  const createTarea = async (tarea) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.post(`/tareas`, tarea, config);
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+
+      console.log(data.tarea);
+      setTareas([...tareas, data.tarea]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
@@ -182,7 +240,10 @@ const ProyectosProvider = ({ children }) => {
         proyectos,
         alertaProyecto,
         cargando,
+        cargandoTarea,
         mostrarModalConfirm,
+        mostrarModalFormularioTarea,
+        tareas,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -191,6 +252,10 @@ const ProyectosProvider = ({ children }) => {
         updateProyecto,
         deleteProyecto,
         setMostrarModalConfirm,
+        handleModalTarea,
+        createTarea,
+        selectTareasByProyecto,
+        setTareas,
       }}
     >
       {children}
