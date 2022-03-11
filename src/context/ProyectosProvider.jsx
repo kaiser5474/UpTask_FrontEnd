@@ -17,22 +17,17 @@ const ProyectosProvider = ({ children }) => {
     useState(false);
   const [tareas, setTareas] = useState([]);
   const [tarea, setTarea] = useState({});
+  const [colaborador, setColaborador] = useState({});
   const navigate = useNavigate();
   const { auth } = useAuth();
 
   useEffect(() => {
     const selectProyectos = async () => {
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
+        const { error, config } = configAndTokenToAxios();
+        if (error) {
           return;
         }
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
         const { data } = await clienteAxios("/proyectos", config);
         setProyectos(data.listadoProyectos);
       } catch (error) {
@@ -48,16 +43,10 @@ const ProyectosProvider = ({ children }) => {
   //funciones
   const createProyecto = async (proyecto) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await clienteAxios.post("/proyectos", proyecto, config);
 
       setProyectos([...proyectos, data.proyectoAlmacenado]);
@@ -81,16 +70,10 @@ const ProyectosProvider = ({ children }) => {
   const selectProyecto = async (id) => {
     setCargando(true);
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await clienteAxios(`/proyectos/${id}`, config);
       setProyecto(data.proyecto);
     } catch (error) {
@@ -105,16 +88,10 @@ const ProyectosProvider = ({ children }) => {
 
   const updateProyecto = async (proyecto) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await clienteAxios.put(
         `/proyectos/${proyecto}`,
         proyecto,
@@ -143,16 +120,10 @@ const ProyectosProvider = ({ children }) => {
 
   const deleteProyecto = async (id) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await clienteAxios.delete(`/proyectos/${id}`, config);
       const proyectosActualizados = proyectos.filter((proyectoIter) =>
         proyectoIter._id !== id ? proyectoIter : null
@@ -178,16 +149,10 @@ const ProyectosProvider = ({ children }) => {
   const selectTareasByProyecto = async (id) => {
     setCargandoTarea(true);
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
         return;
       }
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await clienteAxios(`/tareas/proyecto/${id}`, config);
       setTareas(data.tareas);
     } catch (error) {
@@ -206,17 +171,11 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const createTarea = async (tarea) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
-    }
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
       const { data } = await clienteAxios.post(`/tareas`, tarea, config);
       setAlertaProyecto({
         msg: data.msg,
@@ -236,18 +195,11 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const editTarea = async (tarea) => {
-    const token = localStorage.getItem("token");
-    const { _id } = tarea;
-    if (!token) {
-      return;
-    }
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
       const { data } = await clienteAxios.put(`/tareas/${_id}`, tarea, config);
       const tareasActualizadas = tareas.map((tareaState) =>
         tarea._id === tareaState._id ? tarea : tareaState
@@ -260,17 +212,11 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const deleteTarea = async (id) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      return;
-    }
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
     try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
       const { data } = await clienteAxios.delete(`/tareas/${id}`, config);
       const tareasActualizadas = tareas.filter((tareaState) =>
         id !== tareaState._id ? tareaState : null
@@ -290,6 +236,84 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const submitColaborador = async (email) => {
+    try {
+      setCargando(true);
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      const { data } = await clienteAxios.post(
+        `/proyectos/colaboradores`,
+        { email },
+        config
+      );
+      setColaborador(data.usuario);
+      setAlertaProyecto({});
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+      setColaborador({});
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const createColaborador = async () => {
+    const { _id } = colaborador;
+    try {
+      setCargando(true);
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      const { data } = await clienteAxios.post(
+        `/proyectos/colaborador/${proyecto._id}`,
+        { _id },
+        config
+      );
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+      setColaborador({});
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const configAndTokenToAxios = () => {
+    const token = localStorage.getItem("token");
+    let error = false;
+    if (!token) {
+      error = true;
+      return {
+        config: "",
+        error,
+      };
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return {
+      config,
+      error,
+    };
+  };
+
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
@@ -307,6 +331,7 @@ const ProyectosProvider = ({ children }) => {
         mostrarModalFormularioTarea,
         tareas,
         tarea,
+        colaborador,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -322,6 +347,9 @@ const ProyectosProvider = ({ children }) => {
         handleModalEditTarea,
         editTarea,
         deleteTarea,
+        submitColaborador,
+        setColaborador,
+        createColaborador,
       }}
     >
       {children}
