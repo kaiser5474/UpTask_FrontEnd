@@ -16,6 +16,7 @@ const ProyectosProvider = ({ children }) => {
   const [mostrarModalFormularioTarea, setMostrarModalFormularioTarea] =
     useState(false);
   const [tareas, setTareas] = useState([]);
+  const [tarea, setTarea] = useState({});
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -201,6 +202,7 @@ const ProyectosProvider = ({ children }) => {
 
   const handleModalTarea = () => {
     setMostrarModalFormularioTarea(!mostrarModalFormularioTarea);
+    setTarea({});
   };
 
   const createTarea = async (tarea) => {
@@ -220,9 +222,69 @@ const ProyectosProvider = ({ children }) => {
         msg: data.msg,
         error: false,
       });
-
-      console.log(data.tarea);
       setTareas([...tareas, data.tarea]);
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 2500);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleModalEditTarea = (tarea) => {
+    setTarea(tarea);
+  };
+
+  const editTarea = async (tarea) => {
+    const token = localStorage.getItem("token");
+    const { _id } = tarea;
+    if (!token) {
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.put(`/tareas/${_id}`, tarea, config);
+      const tareasActualizadas = tareas.map((tareaState) =>
+        tarea._id === tareaState._id ? tarea : tareaState
+      );
+      setTareas(tareasActualizadas);
+      handleModalTarea();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteTarea = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return;
+    }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const { data } = await clienteAxios.delete(`/tareas/${id}`, config);
+      const tareasActualizadas = tareas.filter((tareaState) =>
+        id !== tareaState._id ? tareaState : null
+      );
+      setTareas(tareasActualizadas);
+      setMostrarModalConfirm(false);
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 2500);
+      //handleModalTarea();
     } catch (error) {
       console.log(error);
     }
@@ -244,6 +306,7 @@ const ProyectosProvider = ({ children }) => {
         mostrarModalConfirm,
         mostrarModalFormularioTarea,
         tareas,
+        tarea,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -256,6 +319,9 @@ const ProyectosProvider = ({ children }) => {
         createTarea,
         selectTareasByProyecto,
         setTareas,
+        handleModalEditTarea,
+        editTarea,
+        deleteTarea,
       }}
     >
       {children}

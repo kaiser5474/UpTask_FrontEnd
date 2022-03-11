@@ -18,7 +18,24 @@ const ModalFormularioTarea = () => {
     handleModalTarea,
     setAlertaProyecto,
     createTarea,
+    tarea,
+    editTarea,
   } = useProyectos();
+
+  useEffect(() => {
+    if (tarea?._id) {
+      setNombre(tarea.nombre);
+      setDescripcion(tarea.descripcion);
+      setPrioridad(tarea.prioridad);
+      setFechaEntrega(tarea.fechaEntrega?.split("T")[0]);
+      return;
+    } else {
+      setNombre("");
+      setDescripcion("");
+      setPrioridad("");
+      setFechaEntrega("");
+    }
+  }, [tarea]);
 
   const { id } = useParams();
 
@@ -32,18 +49,29 @@ const ModalFormularioTarea = () => {
       });
       return;
     }
-    createTarea({
-      nombre,
-      descripcion,
-      prioridad,
-      fechaEntrega,
-      proyecto: id,
-    });
-    setNombre("");
-    setDescripcion("");
-    setPrioridad("");
-    setFechaEntrega("");
-    handleModalTarea();
+    if (tarea?._id) {
+      console.log(tarea);
+      editTarea({
+        nombre,
+        descripcion,
+        prioridad,
+        fechaEntrega,
+        _id: tarea._id,
+      });
+    } else {
+      createTarea({
+        nombre,
+        descripcion,
+        prioridad,
+        fechaEntrega,
+        proyecto: id,
+      });
+      setNombre("");
+      setDescripcion("");
+      setPrioridad("");
+      setFechaEntrega("");
+      handleModalTarea();
+    }
   };
   const { msg } = alertaProyecto;
   return (
@@ -112,7 +140,7 @@ const ModalFormularioTarea = () => {
                     as="h3"
                     className="text-4xl leading-6 font-bold text-gray-900"
                   >
-                    Crear Tarea
+                    {tarea?._id ? "Editar Tarea" : "Crear Tarea"}
                   </Dialog.Title>
                   {msg && <Alerta alerta={alertaProyecto} />}
                   <form className="my-10" onSubmit={handleSubmit}>
@@ -183,7 +211,7 @@ const ModalFormularioTarea = () => {
                     </div>
                     <input
                       type="submit"
-                      value="Insertar Tarea"
+                      value={tarea?._id ? "Guardar Cambios" : "Insertar Tarea"}
                       className="bg-sky-600 hover:bg-sky-700 w-full p-3 font-bold text-center text-white uppercase rounded-md cursor-pointer transition-colors"
                     />
                   </form>

@@ -3,6 +3,7 @@ import useProyectos from "../../hooks/useProyectos";
 import { Link, useParams } from "react-router-dom";
 import ModalFormularioTareas from "../../components/ModalFormularioTarea";
 import Tarea from "../../components/Tarea";
+import Alerta from "../../components/Alerta";
 
 const Proyecto = () => {
   const {
@@ -13,6 +14,7 @@ const Proyecto = () => {
     handleModalTarea,
     selectTareasByProyecto,
     tareas,
+    alertaProyecto,
   } = useProyectos();
   const { id } = useParams();
 
@@ -22,7 +24,6 @@ const Proyecto = () => {
   }, []);
 
   const { nombre } = proyecto;
-  console.log(tareas);
 
   return cargando && cargandoTarea ? (
     <div className="border border-blue-300 shadow rounded-md p-4 max-w-sm w-full mx-auto">
@@ -87,6 +88,7 @@ const Proyecto = () => {
         Nueva Tarea
       </button>
       <p className="font-bold text-xl mt-10">Tareas del proyecto </p>
+      {alertaProyecto.msg && <Alerta alerta={alertaProyecto} />}
       <div className="bg-white shadow mt-10 rounded-lg">
         {tareas?.length > 0 ? (
           tareas.map((tarea) => <Tarea key={tarea._id} tarea={tarea} />)
@@ -95,6 +97,15 @@ const Proyecto = () => {
             No hay tareas en este proyecto
           </p>
         )}
+      </div>
+      <div className="flex items-center justify-between mt-8 ">
+        <p className="font-bold text-xl mt-10">Colaboradores </p>
+        <Link
+          to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+          className="text-gray-400 uppercase font-bold hover:text-black"
+        >
+          Añadir
+        </Link>
       </div>
       <ModalFormularioTareas />
     </>
