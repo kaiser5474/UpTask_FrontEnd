@@ -1,7 +1,7 @@
 import useProyectos from "../hooks/useProyectos";
 import ModalConfirmColaborador from "./ModalConfirmColaborador";
 
-const Colaborador = ({ colaborador }) => {
+const Colaborador = ({ colaborador, proyectoId }) => {
   const { _id, nombre, email } = colaborador;
   const {
     handleModalTarea,
@@ -25,12 +25,12 @@ const Colaborador = ({ colaborador }) => {
         <p className="mb-1 text-sm text-gray-500">{email}</p>
       </div>
       <div className="flex gap-2">
-        <button
+        {/* <button
           className="bg-indigo-600 px-3 py-2 text-white font-bold uppercase rounded-md text-xs"
           onClick={handleEditar}
         >
           Editar
-        </button>
+        </button> */}
         <button
           className="bg-red-600 px-4 py-3 text-white font-bold uppercase rounded-md text-xs"
           onClick={handleEliminar}
@@ -40,7 +40,7 @@ const Colaborador = ({ colaborador }) => {
         {mostrarModalConfirm && (
           <ModalConfirmColaborador
             text={"Desea eliminar el colaborador"}
-            id={_id}
+            colaboradorId={_id}
           />
         )}
       </div>

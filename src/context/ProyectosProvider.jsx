@@ -197,6 +197,7 @@ const ProyectosProvider = ({ children }) => {
 
   const editTarea = async (tarea) => {
     try {
+      const { _id } = tarea;
       const { error, config } = configAndTokenToAxios();
       if (error) {
         return;
@@ -207,6 +208,13 @@ const ProyectosProvider = ({ children }) => {
       );
       setTareas(tareasActualizadas);
       handleModalTarea();
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
@@ -304,8 +312,44 @@ const ProyectosProvider = ({ children }) => {
         `/proyectos/colaboradores/${id}`,
         config
       );
-      console.log(data.colaboradores);
       setColaboradores(data.colaboradores);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setCargandoTarea(false);
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
+    }
+  };
+
+  const deleteColaborador = async (id, idColaborador) => {
+    try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      console.log(colaborador);
+      //${id} se refiere al Proyecto
+      const { data } = await clienteAxios.post(
+        `/proyectos/eliminar-colaborador/${id}`,
+        { idColaborador },
+        config
+      );
+      const colaboradoresActualizados = colaboradores.filter((colaborador) =>
+        colaborador._id !== idColaborador ? colaborador : null
+      );
+      setColaboradores(colaboradoresActualizados);
+      setAlertaProyecto({
+        msg: data.msg,
+        error: false,
+      });
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
     } catch (error) {
       setAlertaProyecto({
         msg: error.response.data.msg,
@@ -379,6 +423,7 @@ const ProyectosProvider = ({ children }) => {
         setColaborador,
         createColaborador,
         selectColaboradoresByProyecto,
+        deleteColaborador,
       }}
     >
       {children}

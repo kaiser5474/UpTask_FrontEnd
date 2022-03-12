@@ -50,7 +50,6 @@ const ModalFormularioTarea = () => {
       return;
     }
     if (tarea?._id) {
-      console.log(tarea);
       editTarea({
         nombre,
         descripcion,

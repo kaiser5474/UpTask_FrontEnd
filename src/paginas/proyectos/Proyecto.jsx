@@ -102,7 +102,7 @@ const Proyecto = () => {
       <div className="bg-white shadow mt-10 rounded-lg">
         {colaboradores?.length > 0 ? (
           colaboradores.map((colaborador) => (
-            <Colaborador key={colaborador._id} colaborador={colaborador} />
+            <Colaborador key={colaborador._id} colaborador={colaborador} proyectoId = {id} />
           ))
         ) : (
           <p className="text-center my-5 p-10">

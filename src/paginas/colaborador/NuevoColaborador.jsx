@@ -1,6 +1,7 @@
 import CargandoDocumento from "../../components/CargandoDocumento";
 import FormularioColaborador from "../../components/FormularioColaborador";
 import useProyectos from "../../hooks/useProyectos";
+// import { MemoryRouter } from "react-router-dom"
 
 const NuevoColaborador = () => {
   const { proyecto, colaborador, cargando, createColaborador } = useProyectos();

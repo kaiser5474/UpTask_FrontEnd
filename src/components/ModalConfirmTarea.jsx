@@ -6,9 +6,7 @@ const ModalConfirmTarea = ({ text, id }) => {
     setMostrarModalConfirm(false);
   };
   const handleClick = () => {
-    console.log("Eliminar tarea");
-    deleteTarea(id);
-    
+    deleteTarea(id);    
   };
   return (
     <>
