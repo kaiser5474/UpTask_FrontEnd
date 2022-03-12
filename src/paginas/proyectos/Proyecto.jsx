@@ -5,6 +5,7 @@ import ModalFormularioTareas from "../../components/ModalFormularioTarea";
 import Tarea from "../../components/Tarea";
 import Alerta from "../../components/Alerta";
 import CargandoDocumento from "../../components/CargandoDocumento";
+import Colaborador from "../../components/Colaborador";
 
 const Proyecto = () => {
   const {
@@ -16,12 +17,15 @@ const Proyecto = () => {
     selectTareasByProyecto,
     tareas,
     alertaProyecto,
+    colaboradores,
+    selectColaboradoresByProyecto,
   } = useProyectos();
   const { id } = useParams();
 
   useEffect(() => {
     selectProyecto(id);
     selectTareasByProyecto(id);
+    selectColaboradoresByProyecto(id);
   }, []);
 
   const { nombre } = proyecto;
@@ -85,6 +89,7 @@ const Proyecto = () => {
           </p>
         )}
       </div>
+
       <div className="flex items-center justify-between mt-8 ">
         <p className="font-bold text-xl mt-10">Colaboradores </p>
         <Link
@@ -93,6 +98,17 @@ const Proyecto = () => {
         >
           Añadir
         </Link>
+      </div>
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {colaboradores?.length > 0 ? (
+          colaboradores.map((colaborador) => (
+            <Colaborador key={colaborador._id} colaborador={colaborador} />
+          ))
+        ) : (
+          <p className="text-center my-5 p-10">
+            No hay colaboradores en este proyecto
+          </p>
+        )}
       </div>
       <ModalFormularioTareas />
     </>

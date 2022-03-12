@@ -18,6 +18,7 @@ const ProyectosProvider = ({ children }) => {
   const [tareas, setTareas] = useState([]);
   const [tarea, setTarea] = useState({});
   const [colaborador, setColaborador] = useState({});
+  const [colaboradores, setColaboradores] = useState([]);
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -244,7 +245,7 @@ const ProyectosProvider = ({ children }) => {
         return;
       }
       const { data } = await clienteAxios.post(
-        `/proyectos/colaboradores`,
+        `/proyectos/colaborador`,
         { email },
         config
       );
@@ -292,6 +293,32 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const selectColaboradoresByProyecto = async (id) => {
+    setCargandoTarea(true);
+    try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      const { data } = await clienteAxios(
+        `/proyectos/colaboradores/${id}`,
+        config
+      );
+      console.log(data.colaboradores);
+      setColaboradores(data.colaboradores);
+    } catch (error) {
+      setAlertaProyecto({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    } finally {
+      setCargandoTarea(false);
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
+    }
+  };
+
   const configAndTokenToAxios = () => {
     const token = localStorage.getItem("token");
     let error = false;
@@ -332,6 +359,7 @@ const ProyectosProvider = ({ children }) => {
         tareas,
         tarea,
         colaborador,
+        colaboradores,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -350,6 +378,7 @@ const ProyectosProvider = ({ children }) => {
         submitColaborador,
         setColaborador,
         createColaborador,
+        selectColaboradoresByProyecto,
       }}
     >
       {children}
