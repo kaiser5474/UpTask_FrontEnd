@@ -13,6 +13,8 @@ const ProyectosProvider = ({ children }) => {
   const [cargando, setCargando] = useState(false);
   const [cargandoTarea, setCargandoTarea] = useState(false);
   const [mostrarModalConfirm, setMostrarModalConfirm] = useState(false);
+  const [mostrarModalConfirmColaborador, setMostrarModalConfirmColaborador] =
+    useState(false);
   const [mostrarModalFormularioTarea, setMostrarModalFormularioTarea] =
     useState(false);
   const [tareas, setTareas] = useState([]);
@@ -332,7 +334,6 @@ const ProyectosProvider = ({ children }) => {
       if (error) {
         return;
       }
-      console.log(colaborador);
       //${id} se refiere al Proyecto
       const { data } = await clienteAxios.post(
         `/proyectos/eliminar-colaborador/${id}`,
@@ -360,6 +361,28 @@ const ProyectosProvider = ({ children }) => {
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
+    }
+  };
+
+  const completarTarea = async (_id) => {
+    try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      const { data } = await clienteAxios.post(
+        `tareas/estado/${_id}`,
+        {},
+        config
+      );
+
+      const tareasActualizadas = tareas.map((tarea) =>
+        tarea._id === _id ? data.tareaActualizada : tarea
+      );
+      setTareas(tareasActualizadas);
+      console.log(tareasActualizadas);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -404,6 +427,7 @@ const ProyectosProvider = ({ children }) => {
         tarea,
         colaborador,
         colaboradores,
+        mostrarModalConfirmColaborador,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -424,6 +448,8 @@ const ProyectosProvider = ({ children }) => {
         createColaborador,
         selectColaboradoresByProyecto,
         deleteColaborador,
+        completarTarea,
+        setMostrarModalConfirmColaborador,
       }}
     >
       {children}

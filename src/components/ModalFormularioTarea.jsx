@@ -47,6 +47,9 @@ const ModalFormularioTarea = () => {
         msg: "Todos los campos son obligatorios",
         error: true,
       });
+      setTimeout(() => {
+        setAlertaProyecto({});
+      }, 3000);
       return;
     }
     if (tarea?._id) {

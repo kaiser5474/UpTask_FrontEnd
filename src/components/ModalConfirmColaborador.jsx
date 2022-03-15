@@ -1,15 +1,14 @@
 import useProyectos from "../hooks/useProyectos";
 
 const ModalConfirmColaborador = ({ text, colaboradorId }) => {
-  const { setMostrarModalConfirm, deleteColaborador, colaborador, proyecto } =
+  const { deleteColaborador, colaborador, proyecto, setMostrarModalConfirmColaborador } =
     useProyectos();
   const cerrarModal = () => {
-    setMostrarModalConfirm(false);
+    setMostrarModalConfirmColaborador(false);
   };
   const handleClick = () => {
-    console.log(colaborador);
     deleteColaborador(proyecto._id, colaboradorId);
-    setMostrarModalConfirm(false);
+    setMostrarModalConfirmColaborador(false);
   };
   return (
     <>

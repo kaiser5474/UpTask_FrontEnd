@@ -6,8 +6,9 @@ const Colaborador = ({ colaborador, proyectoId }) => {
   const {
     handleModalTarea,
     handleModalEditTarea,
-    mostrarModalConfirm,
+    mostrarModalConfirmColaborador,
     setMostrarModalConfirm,
+    setMostrarModalConfirmColaborador,
   } = useProyectos();
 
   const handleEditar = () => {
@@ -16,7 +17,7 @@ const Colaborador = ({ colaborador, proyectoId }) => {
   };
 
   const handleEliminar = () => {
-    setMostrarModalConfirm(true);
+    setMostrarModalConfirmColaborador(true);
   };
   return (
     <div className="border-b p-5 flex justify-between items-center">
@@ -37,7 +38,7 @@ const Colaborador = ({ colaborador, proyectoId }) => {
         >
           Eliminar
         </button>
-        {mostrarModalConfirm && (
+        {mostrarModalConfirmColaborador && (
           <ModalConfirmColaborador
             text={"Desea eliminar el colaborador"}
             colaboradorId={_id}

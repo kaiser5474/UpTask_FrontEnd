@@ -29,7 +29,6 @@ const AuthProvider = ({ children }) => {
         navigate("/proyectos");
       } catch (error) {
         console.log(error.response.data.msg);
-        //setAuth({});
       } finally {
         setCargando(false);
       }
