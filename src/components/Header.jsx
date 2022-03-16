@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useProyectos from "../hooks/useProyectos";
+import Busqueda from "./Busqueda";
 
 const Header = () => {
   const { cerrarSesion } = useAuth();
-  const { cerrarSesionProyectos } = useProyectos();
+  const { cerrarSesionProyectos, buscador, handleBuscador } = useProyectos();
 
   const handleCerrarSesion = () => {
     cerrarSesion();
@@ -23,7 +24,11 @@ const Header = () => {
             className="text-center rounded-lg lg:w-96 block p-2 border mb-5 md:mb-0 "
           /> */}
           <div className="flex flex-col md:flex-row items-center gap-4">
-            <button className="font-bold uppercase" type="button">
+            <button
+              className="font-bold uppercase"
+              type="button"
+              onClick={handleBuscador}
+            >
               Buscar Proyecto
             </button>
             <Link to="/proyectos" className="font-bold uppercase">
@@ -39,6 +44,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <Busqueda />
     </header>
   );
 };

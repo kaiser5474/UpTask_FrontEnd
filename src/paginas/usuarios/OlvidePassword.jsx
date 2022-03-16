@@ -16,11 +16,9 @@ const OlvidePassword = () => {
       });
     }
     try {
-      const { data } = await clienteAxios.post(
-        `/usuarios/olvide-password/`,
-        { email }
-      );
-      //console.log(data);
+      const { data } = await clienteAxios.post(`/usuarios/olvide-password/`, {
+        email,
+      });
       setAlerta({
         msg: data.msg,
         error: false,
@@ -31,7 +29,6 @@ const OlvidePassword = () => {
         error: true,
       });
     }
-    //setAlerta({});
   };
   return (
     <>

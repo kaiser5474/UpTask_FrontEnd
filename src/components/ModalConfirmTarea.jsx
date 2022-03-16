@@ -6,7 +6,7 @@ const ModalConfirmTarea = ({ text, id }) => {
     setMostrarModalConfirm(false);
   };
   const handleClick = () => {
-    deleteTarea(id);    
+    deleteTarea(id);
   };
   return (
     <>
@@ -81,7 +81,7 @@ const ModalConfirmTarea = ({ text, id }) => {
           </div>
         </div>
       </div>
-      <div className="fixed inset-0 z-40 bg-black opacity-50"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-30"></div>
     </>
   );
 };

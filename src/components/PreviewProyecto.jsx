@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 const PreviewProyecto = ({ proyecto }) => {
   const { nombre, cliente, _id, creador } = proyecto;
   const { auth } = useAuth();
-  //console.log(auth);
   return (
     <div className="border-b p-5 flex justify-between">
       <div className="flex items-center gap-2">

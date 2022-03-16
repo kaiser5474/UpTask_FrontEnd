@@ -207,7 +207,7 @@ const ModalFormularioTarea = () => {
                       >
                         <option value="">-- Seleccionar --</option>
                         {PRIORIDAD.map((opcion) => (
-                          <option key={opcion}>{opcion}</option>
+                          <option key={opcion} value={opcion}>{opcion}</option>
                         ))}
                       </select>
                     </div>

@@ -55,7 +55,7 @@ const FormularioProyecto = () => {
     setFechaEntrega("");
   };
 
-  const handleSubmitUpdate = async (e) => {
+  const handleSubmitUpdate = (e) => {
     e.preventDefault();
     if ([nombre, descripcion, fechaEntrega, cliente].includes("")) {
       return setAlertaProyecto({
@@ -63,12 +63,13 @@ const FormularioProyecto = () => {
         error: true,
       });
     }
-    await updateProyecto({
+    updateProyecto({
       _id: proyecto._id,
       nombre,
       descripcion,
       fechaEntrega,
       cliente,
+      creador: proyecto.creador,
     });
   };
 

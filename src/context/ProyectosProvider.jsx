@@ -2,6 +2,9 @@ import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import clienteAxios from "../config/clienteAxios";
 import useAuth from "../hooks/useAuth";
+import io from "socket.io-client";
+
+let socket;
 
 const ProyectosContext = createContext();
 
@@ -21,6 +24,7 @@ const ProyectosProvider = ({ children }) => {
   const [tarea, setTarea] = useState({});
   const [colaborador, setColaborador] = useState({});
   const [colaboradores, setColaboradores] = useState([]);
+  const [buscador, setBuscador] = useState(false);
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -43,6 +47,10 @@ const ProyectosProvider = ({ children }) => {
     selectProyectos();
   }, [auth]);
 
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+  }, []);
+
   //funciones
   const createProyecto = async (proyecto) => {
     try {
@@ -51,7 +59,6 @@ const ProyectosProvider = ({ children }) => {
         return;
       }
       const { data } = await clienteAxios.post("/proyectos", proyecto, config);
-
       setProyectos([...proyectos, data.proyectoAlmacenado]);
       setAlertaProyecto({
         msg: data.msg,
@@ -96,7 +103,7 @@ const ProyectosProvider = ({ children }) => {
         return;
       }
       const { data } = await clienteAxios.put(
-        `/proyectos/${proyecto}`,
+        `/proyectos/${proyecto._id}`,
         proyecto,
         config
       );
@@ -187,9 +194,11 @@ const ProyectosProvider = ({ children }) => {
       setTareas([...tareas, data.tarea]);
       setTimeout(() => {
         setAlertaProyecto({});
-      }, 2500);
+      }, 3000);
+
+      //SOCKET IO
+      socket.emit("nueva tarea", data.tarea);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -386,6 +395,10 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  const handleBuscador = () => {
+    setBuscador(!buscador);
+  };
+
   const configAndTokenToAxios = () => {
     const token = localStorage.getItem("token");
     let error = false;
@@ -408,6 +421,11 @@ const ProyectosProvider = ({ children }) => {
     };
   };
 
+  const submitTareaSocket = (tarea) => {
+    //console.log(tarea.proyecto);
+    //setTareas([...tareas, tarea]);
+  };
+
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
@@ -428,6 +446,7 @@ const ProyectosProvider = ({ children }) => {
         colaborador,
         colaboradores,
         mostrarModalConfirmColaborador,
+        buscador,
         setProyectos,
         setAlertaProyecto,
         createProyecto,
@@ -450,6 +469,8 @@ const ProyectosProvider = ({ children }) => {
         deleteColaborador,
         completarTarea,
         setMostrarModalConfirmColaborador,
+        handleBuscador,
+        submitTareaSocket,
       }}
     >
       {children}
