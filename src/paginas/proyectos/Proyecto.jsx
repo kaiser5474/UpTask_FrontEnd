@@ -25,6 +25,8 @@ const Proyecto = () => {
     selectColaboradoresByProyecto,
     submitTareaSocket,
     deleteTareaSocket,
+    updateTareaSocket,
+    completarTareaSocket,
   } = useProyectos();
 
   const admin = useAdmin();
@@ -47,10 +49,22 @@ const Proyecto = () => {
         submitTareaSocket(tareaNueva);
       }
     });
-    
+
     socket.on("tarea eliminada", (tareaEliminada) => {
       if (tareaEliminada.proyecto === proyecto._id) {
         deleteTareaSocket(tareaEliminada);
+      }
+    });
+
+    socket.on("tarea editada", (tareaEditada) => {
+      if (tareaEditada.proyecto === proyecto._id) {
+        updateTareaSocket(tareaEditada);
+      }
+    });
+
+    socket.on("tarea completada", (tareaCompletada) => {
+      if (tareaCompletada.proyecto === proyecto._id) {
+        completarTareaSocket(tareaCompletada);
       }
     });
   });
@@ -58,7 +72,6 @@ const Proyecto = () => {
   const { nombre } = proyecto;
 
   const handleClick = () => {
-    console.log(proyecto._id);
     handleModalTarea();
   };
 

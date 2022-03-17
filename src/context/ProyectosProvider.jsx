@@ -195,14 +195,13 @@ const ProyectosProvider = ({ children }) => {
         msg: data.msg,
         error: false,
       });
-      console.log(data.tarea);
-      //setTareas([...tareas, data.tarea]);
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
 
       //SOCKET IO
       socket.emit("nueva tarea", data.tarea);
+      setTarea({});
     } catch (error) {}
   };
 
@@ -227,6 +226,9 @@ const ProyectosProvider = ({ children }) => {
         msg: data.msg,
         error: false,
       });
+
+      //SOCKET IO
+      socket.emit("editar tarea", data.tarea);
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
@@ -270,11 +272,8 @@ const ProyectosProvider = ({ children }) => {
         {},
         config
       );
-
-      const tareasActualizadas = tareas.map((tarea) =>
-        tarea._id === _id ? data.tareaActualizada : tarea
-      );
-      setTareas(tareasActualizadas);
+      //SOCKET IO
+      socket.emit("completar tarea", data.tareaActualizada);
     } catch (error) {
       console.log(error);
     }
@@ -427,8 +426,8 @@ const ProyectosProvider = ({ children }) => {
   };
 
   //Funciones SOCKET IO
-  const submitTareaSocket = (tarea) => {
-    setTareas([...tareas, tarea]);
+  const submitTareaSocket = (tareaInsertada) => {
+    setTareas([...tareas, tareaInsertada]);
   };
 
   const deleteTareaSocket = (tareaEliminada) => {
@@ -438,10 +437,26 @@ const ProyectosProvider = ({ children }) => {
     setTareas(tareasActualizadas);
   };
 
+  const updateTareaSocket = (tareaEditada) => {
+    const tareasActualizadas = tareas.map((tareaState) =>
+      tareaEditada._id === tareaState._id ? tareaEditada : tareaState
+    );
+    setTareas(tareasActualizadas);
+  };
+
+  const completarTareaSocket = (tareaCompletada) => {
+    const tareasActualizadas = tareas.map((tarea) =>
+      tarea._id === tareaCompletada._id ? tareaCompletada : tarea
+    );
+    setTareas(tareasActualizadas);
+  };
+
   //Funcion para cerrar sesion
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
+    setTareas([]);
+    setColaboradores([]);
   };
 
   return (
@@ -489,6 +504,8 @@ const ProyectosProvider = ({ children }) => {
         setMostrarModalConfirmTarea,
         setColaboradores,
         deleteTareaSocket,
+        updateTareaSocket,
+        completarTareaSocket,
       }}
     >
       {children}

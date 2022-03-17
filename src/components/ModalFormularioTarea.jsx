@@ -62,7 +62,6 @@ const ModalFormularioTarea = () => {
         _id: tarea._id,
       });
     } else {
-      console.log(id);
       createTarea({
         nombre,
         descripcion,
