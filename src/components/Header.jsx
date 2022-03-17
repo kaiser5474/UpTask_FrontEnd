@@ -1,15 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import useProyectos from "../hooks/useProyectos";
 import Busqueda from "./Busqueda";
 
 const Header = () => {
   const { cerrarSesion } = useAuth();
-  const { cerrarSesionProyectos, buscador, handleBuscador } = useProyectos();
+  const {
+    cerrarSesionProyectos,
+    buscador,
+    handleBuscador,
+    setProyecto,
+    setTareas,
+    setColaboradores,
+  } = useProyectos();
+
+  let navigate = useNavigate();
 
   const handleCerrarSesion = () => {
     cerrarSesion();
     cerrarSesionProyectos();
+  };
+
+  const handleClick = () => {
+    setProyecto({});
+    setTareas([]);
+    setColaboradores([]);
+    navigate("/proyectos");
   };
   return (
     <header className="px-4 py-5 border-b bg-white w-full">
@@ -31,9 +47,11 @@ const Header = () => {
             >
               Buscar Proyecto
             </button>
-            <Link to="/proyectos" className="font-bold uppercase">
+            {/* <Link to="/proyectos" className="font-bold uppercase"> */}
+            <button className="font-bold uppercase" onClick={handleClick}>
               Proyectos
-            </Link>
+            </button>
+            {/* </Link> */}
             <button
               type="button"
               className="text-white text-sm bg-sky-600 p-3 rounded-md font-bold uppercase"

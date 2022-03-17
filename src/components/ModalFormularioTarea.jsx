@@ -42,6 +42,7 @@ const ModalFormularioTarea = () => {
   //funciones
   const handleSubmit = (e) => {
     e.preventDefault();
+    //console.log(id);
     if ([nombre, descripcion, prioridad, fechaEntrega].includes("")) {
       setAlertaProyecto({
         msg: "Todos los campos son obligatorios",
@@ -61,6 +62,7 @@ const ModalFormularioTarea = () => {
         _id: tarea._id,
       });
     } else {
+      console.log(id);
       createTarea({
         nombre,
         descripcion,
@@ -207,7 +209,9 @@ const ModalFormularioTarea = () => {
                       >
                         <option value="">-- Seleccionar --</option>
                         {PRIORIDAD.map((opcion) => (
-                          <option key={opcion} value={opcion}>{opcion}</option>
+                          <option key={opcion} value={opcion}>
+                            {opcion}
+                          </option>
                         ))}
                       </select>
                     </div>

@@ -1,10 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useProyectos from "../hooks/useProyectos";
 
-const PreviewProyecto = ({ proyecto }) => {
-  const { nombre, cliente, _id, creador } = proyecto;
+const PreviewProyecto = ({ proyectoPreview }) => {
+  const { nombre, cliente, _id, creador } = proyectoPreview;
   const { auth } = useAuth();
+
   return (
     <div className="border-b p-5 flex justify-between">
       <div className="flex items-center gap-2">

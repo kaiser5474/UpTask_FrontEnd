@@ -16,6 +16,8 @@ const ProyectosProvider = ({ children }) => {
   const [cargando, setCargando] = useState(false);
   const [cargandoTarea, setCargandoTarea] = useState(false);
   const [mostrarModalConfirm, setMostrarModalConfirm] = useState(false);
+  const [mostrarModalConfirmTarea, setMostrarModalConfirmTarea] =
+    useState(false);
   const [mostrarModalConfirmColaborador, setMostrarModalConfirmColaborador] =
     useState(false);
   const [mostrarModalFormularioTarea, setMostrarModalFormularioTarea] =
@@ -25,6 +27,7 @@ const ProyectosProvider = ({ children }) => {
   const [colaborador, setColaborador] = useState({});
   const [colaboradores, setColaboradores] = useState([]);
   const [buscador, setBuscador] = useState(false);
+
   const navigate = useNavigate();
   const { auth } = useAuth();
 
@@ -156,6 +159,7 @@ const ProyectosProvider = ({ children }) => {
     }
   };
 
+  //funciones de Tareas
   const selectTareasByProyecto = async (id) => {
     setCargandoTarea(true);
     try {
@@ -191,15 +195,15 @@ const ProyectosProvider = ({ children }) => {
         msg: data.msg,
         error: false,
       });
-      setTareas([...tareas, data.tarea]);
+      console.log(data.tarea);
+      //setTareas([...tareas, data.tarea]);
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
 
       //SOCKET IO
       socket.emit("nueva tarea", data.tarea);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleModalEditTarea = (tarea) => {
@@ -237,25 +241,47 @@ const ProyectosProvider = ({ children }) => {
       if (error) {
         return;
       }
+      setMostrarModalConfirmTarea(false);
       const { data } = await clienteAxios.delete(`/tareas/${id}`, config);
-      const tareasActualizadas = tareas.filter((tareaState) =>
-        id !== tareaState._id ? tareaState : null
-      );
-      setTareas(tareasActualizadas);
-      setMostrarModalConfirm(false);
+
       setAlertaProyecto({
         msg: data.msg,
         error: false,
       });
+
+      //SOCKET IO
+      socket.emit("eliminar tarea", data.tarea);
       setTimeout(() => {
         setAlertaProyecto({});
-      }, 2500);
-      //handleModalTarea();
+      }, 3000);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const completarTarea = async (_id) => {
+    try {
+      const { error, config } = configAndTokenToAxios();
+      if (error) {
+        return;
+      }
+      const { data } = await clienteAxios.post(
+        `tareas/estado/${_id}`,
+        {},
+        config
+      );
+
+      const tareasActualizadas = tareas.map((tarea) =>
+        tarea._id === _id ? data.tareaActualizada : tarea
+      );
+      setTareas(tareasActualizadas);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //Fin de funciones de tareas
+
+  //Funciones de Colaboradores
   const submitColaborador = async (email) => {
     try {
       setCargando(true);
@@ -372,28 +398,7 @@ const ProyectosProvider = ({ children }) => {
       }, 3000);
     }
   };
-
-  const completarTarea = async (_id) => {
-    try {
-      const { error, config } = configAndTokenToAxios();
-      if (error) {
-        return;
-      }
-      const { data } = await clienteAxios.post(
-        `tareas/estado/${_id}`,
-        {},
-        config
-      );
-
-      const tareasActualizadas = tareas.map((tarea) =>
-        tarea._id === _id ? data.tareaActualizada : tarea
-      );
-      setTareas(tareasActualizadas);
-      console.log(tareasActualizadas);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //Fin de funciones de Colaboradores
 
   const handleBuscador = () => {
     setBuscador(!buscador);
@@ -421,11 +426,19 @@ const ProyectosProvider = ({ children }) => {
     };
   };
 
+  //Funciones SOCKET IO
   const submitTareaSocket = (tarea) => {
-    //console.log(tarea.proyecto);
-    //setTareas([...tareas, tarea]);
+    setTareas([...tareas, tarea]);
   };
 
+  const deleteTareaSocket = (tareaEliminada) => {
+    const tareasActualizadas = tareas.filter((tareaState) =>
+      tareaEliminada._id !== tareaState._id ? tareaState : null
+    );
+    setTareas(tareasActualizadas);
+  };
+
+  //Funcion para cerrar sesion
   const cerrarSesionProyectos = () => {
     setProyectos([]);
     setProyecto({});
@@ -440,14 +453,16 @@ const ProyectosProvider = ({ children }) => {
         cargando,
         cargandoTarea,
         mostrarModalConfirm,
+        mostrarModalConfirmColaborador,
         mostrarModalFormularioTarea,
+        mostrarModalConfirmTarea,
         tareas,
         tarea,
         colaborador,
         colaboradores,
-        mostrarModalConfirmColaborador,
         buscador,
         setProyectos,
+        setProyecto,
         setAlertaProyecto,
         createProyecto,
         selectProyecto,
@@ -471,6 +486,9 @@ const ProyectosProvider = ({ children }) => {
         setMostrarModalConfirmColaborador,
         handleBuscador,
         submitTareaSocket,
+        setMostrarModalConfirmTarea,
+        setColaboradores,
+        deleteTareaSocket,
       }}
     >
       {children}

@@ -1,21 +1,16 @@
 import useProyectos from "../hooks/useProyectos";
 
 const ModalConfirmTarea = ({ text, id }) => {
-  const { setMostrarModalConfirm, deleteTarea } = useProyectos();
+  const { setMostrarModalConfirmTarea, deleteTarea } = useProyectos();
   const cerrarModal = () => {
-    setMostrarModalConfirm(false);
+    setMostrarModalConfirmTarea(false);
   };
   const handleClick = () => {
     deleteTarea(id);
   };
   return (
     <>
-      {/* <!-- Delete Product Modal --> */}
-      {/* <div
-        // className="overflow-y-auto overflow-x-hidden fixed right-0 left-0 top-4 z-50 justify-center items-center md:inset-0 h-modal sm:h-full"
-        className="overflow-y-auto overflow-x-auto fixed top-1/3 justify-center items-center h-modal sm:h-full"
-        id="popup-modal"
-      > */}
+      {/* <!-- Delete Tarea Modal --> */}
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative px-4 w-full max-w-md h-full md:h-auto">
           {/* <!-- Modal content --> */}
@@ -81,7 +76,7 @@ const ModalConfirmTarea = ({ text, id }) => {
           </div>
         </div>
       </div>
-      <div className="fixed inset-0 z-40 bg-black opacity-30"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-50"></div>
     </>
   );
 };

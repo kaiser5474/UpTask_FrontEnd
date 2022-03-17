@@ -24,10 +24,16 @@ const Proyecto = () => {
     colaboradores,
     selectColaboradoresByProyecto,
     submitTareaSocket,
+    deleteTareaSocket,
   } = useProyectos();
 
   const admin = useAdmin();
-  const {id} = useParams();
+  const { id } = useParams();
+
+  useEffect(() => {
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit("abrir proyecto", id);
+  }, []);
 
   useEffect(() => {
     selectProyecto(id);
@@ -36,22 +42,25 @@ const Proyecto = () => {
   }, [id]);
 
   useEffect(() => {
-    // socket = io(import.meta.env.VITE_BACKEND_URL);
-    // socket.emit("abrir proyecto", id);
-  }, []);
-
-  useEffect(() => {
-    // const x = id;
-    // socket.on("tarea agregada", (tareaNueva) => {
-    //   console.log(proyecto);
-    //   if (tareaNueva.proyecto === proyecto._id) {
-    //     console.log("Entro");
-    //     submitTareaSocket(tareaNueva);
-    //   }
-    // });
+    socket.on("tarea agregada", (tareaNueva) => {
+      if (tareaNueva.proyecto === proyecto._id) {
+        submitTareaSocket(tareaNueva);
+      }
+    });
+    
+    socket.on("tarea eliminada", (tareaEliminada) => {
+      if (tareaEliminada.proyecto === proyecto._id) {
+        deleteTareaSocket(tareaEliminada);
+      }
+    });
   });
 
   const { nombre } = proyecto;
+
+  const handleClick = () => {
+    console.log(proyecto._id);
+    handleModalTarea();
+  };
 
   return cargando && cargandoTarea ? (
     <CargandoDocumento />
@@ -86,7 +95,7 @@ const Proyecto = () => {
         <button
           type="button"
           className="flex gap-2 items-center justify-center text-sm px-5 py-3 mt-5 w-full md:w-auto rounded-lg uppercase font-bold bg-sky-400 text-white "
-          onClick={handleModalTarea}
+          onClick={handleClick}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -109,7 +118,12 @@ const Proyecto = () => {
       {alertaProyecto.msg && <Alerta alerta={alertaProyecto} />}
       <div className="bg-white shadow mt-10 rounded-lg">
         {tareas?.length > 0 ? (
-          tareas.map((tarea) => <Tarea key={tarea._id} tarea={tarea} />)
+          tareas.map(
+            (tarea) =>
+              proyecto?._id === tarea?.proyecto && (
+                <Tarea key={tarea._id} tarea={tarea} />
+              )
+          )
         ) : (
           <p className="text-center my-5 p-10">
             No hay tareas en este proyecto
