@@ -37,7 +37,7 @@ const Tarea = ({ tarea }) => {
   };
   return (
     <>
-      <div className="border-b p-5 flex justify-between items-center">
+      <div className="border-b p-5 flex justify-between items-center gap-2">
         <div className="flex flex-col items-start">
           <p className="mb-1 text-xl">{nombre}</p>
           <p className="mb-1 text-sm text-gray-500 uppercase">{descripcion}</p>
