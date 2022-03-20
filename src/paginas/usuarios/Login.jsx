@@ -8,6 +8,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
+  const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
 
   const { setAuth, cargando } = useAuth();
@@ -27,14 +28,22 @@ const Login = () => {
         password,
       });
       setAuth(data);
-      localStorage.setItem("token", data.token);
-      navigate("/proyectos");
+      if (checked) {
+        localStorage.setItem("token", data.token);
+      } else {
+        sessionStorage.setItem("token", data.token);
+      }
+      navigate("/clientes");
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
         error: true,
       });
     }
+  };
+  const handleChange = (e) => {
+    setChecked(e.target.checked);
+    //console.log(e.target.checked);
   };
   return (
     <>
@@ -85,6 +94,15 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <div className="my-5">
+                <input
+                  type="checkbox"
+                  id="conectado"
+                  className="mr-2"
+                  onChange={handleChange}
+                />
+                <label htmlFor="conectado" className="uppercase text-gray-600">Desea permanecer conectado</label>
+              </div>
             </div>
             <input
               type="submit"

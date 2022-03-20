@@ -11,7 +11,10 @@ const Header = () => {
     handleBuscador,
     setProyecto,
     setTareas,
+    setTarea,
     setColaboradores,
+    setColaborador,
+    setProyectos,
   } = useProyectos();
 
   let navigate = useNavigate();
@@ -24,7 +27,9 @@ const Header = () => {
   const handleClick = () => {
     setProyecto({});
     setTareas([]);
+    //setTarea({});
     setColaboradores([]);
+    //setColaborador({});
     navigate("/proyectos");
   };
   return (

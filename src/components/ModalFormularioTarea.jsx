@@ -10,6 +10,7 @@ const ModalFormularioTarea = () => {
   //hooks
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [nota, setNota] = useState("");
   const [prioridad, setPrioridad] = useState("");
   const [fechaEntrega, setFechaEntrega] = useState("");
   const {
@@ -20,18 +21,22 @@ const ModalFormularioTarea = () => {
     createTarea,
     tarea,
     editTarea,
+    tareas,
+    setTareas,
   } = useProyectos();
 
   useEffect(() => {
     if (tarea?._id) {
       setNombre(tarea.nombre);
       setDescripcion(tarea.descripcion);
+      setNota(tarea.nota);
       setPrioridad(tarea.prioridad);
       setFechaEntrega(tarea.fechaEntrega?.split("T")[0]);
       return;
     } else {
       setNombre("");
       setDescripcion("");
+      setNota("");
       setPrioridad("");
       setFechaEntrega("");
     }
@@ -42,7 +47,6 @@ const ModalFormularioTarea = () => {
   //funciones
   const handleSubmit = (e) => {
     e.preventDefault();
-    //console.log(id);
     if ([nombre, descripcion, prioridad, fechaEntrega].includes("")) {
       setAlertaProyecto({
         msg: "Todos los campos son obligatorios",
@@ -57,6 +61,7 @@ const ModalFormularioTarea = () => {
       editTarea({
         nombre,
         descripcion,
+        nota,
         prioridad,
         fechaEntrega,
         _id: tarea._id,
@@ -65,12 +70,14 @@ const ModalFormularioTarea = () => {
       createTarea({
         nombre,
         descripcion,
+        nota,
         prioridad,
         fechaEntrega,
         proyecto: id,
       });
       setNombre("");
       setDescripcion("");
+      setNota("");
       setPrioridad("");
       setFechaEntrega("");
       handleModalTarea();

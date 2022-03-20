@@ -54,6 +54,13 @@ const ProyectosProvider = ({ children }) => {
     socket = io(import.meta.env.VITE_BACKEND_URL);
   }, []);
 
+  useEffect(() => {
+    if (proyecto._id) {
+      selectTareasByProyecto(proyecto._id);
+      selectColaboradoresByProyecto(proyecto._id);
+    }
+  }, [proyecto]);
+
   //funciones
   const createProyecto = async (proyecto) => {
     try {
@@ -202,7 +209,9 @@ const ProyectosProvider = ({ children }) => {
       //SOCKET IO
       socket.emit("nueva tarea", data.tarea);
       setTarea({});
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleModalEditTarea = (tarea) => {
@@ -229,6 +238,7 @@ const ProyectosProvider = ({ children }) => {
 
       //SOCKET IO
       socket.emit("editar tarea", data.tarea);
+      setTarea({});
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
@@ -253,6 +263,7 @@ const ProyectosProvider = ({ children }) => {
 
       //SOCKET IO
       socket.emit("eliminar tarea", data.tarea);
+      setTarea({});
       setTimeout(() => {
         setAlertaProyecto({});
       }, 3000);
@@ -274,6 +285,7 @@ const ProyectosProvider = ({ children }) => {
       );
       //SOCKET IO
       socket.emit("completar tarea", data.tareaActualizada);
+      setTarea({});
     } catch (error) {
       console.log(error);
     }
@@ -404,7 +416,8 @@ const ProyectosProvider = ({ children }) => {
   };
 
   const configAndTokenToAxios = () => {
-    const token = localStorage.getItem("token");
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
     let error = false;
     if (!token) {
       error = true;
@@ -427,7 +440,12 @@ const ProyectosProvider = ({ children }) => {
 
   //Funciones SOCKET IO
   const submitTareaSocket = (tareaInsertada) => {
-    setTareas([...tareas, tareaInsertada]);
+    const existeTarea = tareas.find(
+      (tareaState) => tareaInsertada._id === tareaState._id
+    );
+    if (!existeTarea) {
+      setTareas([...tareas, tareaInsertada]);
+    }
   };
 
   const deleteTareaSocket = (tareaEliminada) => {
@@ -489,6 +507,7 @@ const ProyectosProvider = ({ children }) => {
         createTarea,
         selectTareasByProyecto,
         setTareas,
+        setTarea,
         handleModalEditTarea,
         editTarea,
         deleteTarea,

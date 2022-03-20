@@ -22,6 +22,9 @@ export const formatearFechaWeekDay = (fecha) => {
     month: "long",
     day: "numeric",
   };
+  fechaNueva.setMinutes(
+    fechaNueva.getMinutes() + fechaNueva.getTimezoneOffset()
+  );
   return fechaNueva.toLocaleString("es-Es", opciones);
 };
 

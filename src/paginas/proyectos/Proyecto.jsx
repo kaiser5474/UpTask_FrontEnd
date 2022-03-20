@@ -18,15 +18,15 @@ const Proyecto = () => {
     cargando,
     cargandoTarea,
     handleModalTarea,
-    selectTareasByProyecto,
     tareas,
     alertaProyecto,
     colaboradores,
-    selectColaboradoresByProyecto,
     submitTareaSocket,
     deleteTareaSocket,
     updateTareaSocket,
     completarTareaSocket,
+    selectTareasByProyecto,
+    selectColaboradoresByProyecto,
   } = useProyectos();
 
   const admin = useAdmin();
@@ -35,13 +35,10 @@ const Proyecto = () => {
   useEffect(() => {
     socket = io(import.meta.env.VITE_BACKEND_URL);
     socket.emit("abrir proyecto", id);
-  }, []);
-
-  useEffect(() => {
     selectProyecto(id);
     selectTareasByProyecto(id);
     selectColaboradoresByProyecto(id);
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     socket.on("tarea agregada", (tareaNueva) => {

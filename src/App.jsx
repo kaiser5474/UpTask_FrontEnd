@@ -13,6 +13,8 @@ import Proyecto from "./paginas/proyectos/Proyecto";
 import NuevoProyecto from "./paginas/proyectos/NuevoProyecto";
 import EditarProyecto from "./paginas/proyectos/EditarProyecto";
 import NuevoColaborador from "./paginas/colaborador/NuevoColaborador";
+import NuevoCliente from "./paginas/clientes/NuevoCliente";
+import Clientes from "./paginas/clientes/Clientes";
 function App() {
   return (
     <BrowserRouter>
@@ -32,9 +34,19 @@ function App() {
             <Route path="/proyectos" element={<RutaProtegida />}>
               <Route index element={<Proyectos />} />
               <Route path="crear-proyecto" element={<NuevoProyecto />} />
-              <Route path="nuevo-colaborador/:id" element={<NuevoColaborador />} />
+              <Route
+                path="nuevo-colaborador/:id"
+                element={<NuevoColaborador />}
+              />
               <Route path="editar/:id" element={<EditarProyecto />} />
               <Route path=":id" element={<Proyecto />} />
+            </Route>
+            <Route path="/clientes" element={<RutaProtegida />}>
+              <Route index element={<Clientes />} />
+              <Route path="crear-cliente" element={<NuevoCliente />} />
+              {/* <Route path="nuevo-colaborador/:id" element={<NuevoColaborador />} />
+              <Route path="editar/:id" element={<EditarProyecto />} />
+              <Route path=":id" element={<Proyecto />} /> */}
             </Route>
           </Routes>
         </ProyectosProvider>
