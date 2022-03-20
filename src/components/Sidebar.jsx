@@ -53,7 +53,7 @@ const Sidebar = () => {
               Clientes
             </button>
           </li>
-          <li className="relative">
+          {/* <li className="relative">
             <a
               className="flex items-center uppercase font-bold text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-white transition duration-300 ease-in-out"
               href="#!"
@@ -62,7 +62,7 @@ const Sidebar = () => {
             >
               Sidenav link 2
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
     </aside>
