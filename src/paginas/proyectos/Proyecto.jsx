@@ -59,9 +59,10 @@ const Proyecto = () => {
       }
     });
 
-    socket.on("tarea completada", (tareaCompletada) => {
+    socket.on("tarea completada", (tareaCompletada, msg) => {
       if (tareaCompletada.proyecto === proyecto._id) {
         completarTareaSocket(tareaCompletada);
+        console.log(msg);
       }
     });
   });
