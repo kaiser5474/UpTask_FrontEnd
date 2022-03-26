@@ -5,11 +5,8 @@ import useProyectos from "../hooks/useProyectos";
 const Sidebar = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
-  const {
-    setProyecto,
-    setTareas,
-    setColaboradores,
-  } = useProyectos();
+  const { setProyecto, setTareas, setColaboradores } = useProyectos();
+
   const handleClickCliente = () => {
     navigate("/clientes");
   };
@@ -18,6 +15,9 @@ const Sidebar = () => {
     setTareas([]);
     setColaboradores([]);
     navigate("/proyectos");
+  };
+  const handleClickPixabay = () => {
+    navigate("/pixabay");
   };
   return (
     <aside className="md:w-1/3 lg:w-1/5 xl:w-1/6 px-5 py-10 border-r-2 border-gray-300">
@@ -53,16 +53,14 @@ const Sidebar = () => {
               Clientes
             </button>
           </li>
-          {/* <li className="relative">
+          <li className="relative">
             <a
               className="flex items-center uppercase font-bold text-sm py-4 px-6 h-12 overflow-hidden text-gray-700 text-ellipsis whitespace-nowrap rounded hover:text-gray-900 hover:bg-white transition duration-300 ease-in-out"
-              href="#!"
-              data-mdb-ripple="true"
-              data-mdb-ripple-color="dark"
+              onClick={handleClickPixabay}
             >
-              Sidenav link 2
+              Pixabay
             </a>
-          </li> */}
+          </li>
         </ul>
       </div>
     </aside>

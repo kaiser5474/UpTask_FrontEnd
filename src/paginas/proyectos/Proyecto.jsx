@@ -8,6 +8,7 @@ import Alerta from "../../components/Alerta";
 import CargandoDocumento from "../../components/CargandoDocumento";
 import Colaborador from "../../components/Colaborador";
 import io from "socket.io-client";
+import DnD from "../../components/DnD";
 
 let socket;
 
@@ -76,6 +77,7 @@ const Proyecto = () => {
     <CargandoDocumento />
   ) : (
     <>
+      <DnD className="" />
       <div className="p-5 flex justify-between">
         <h1 className="font-black text-4xl">{nombre}</h1>
         {admin && (

@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { formatearFechaWeekDay } from "../helpers";
 import useProyectos from "../hooks/useProyectos";
 import useAdmin from "../hooks/useAdmin";
 import ModalConfirmTarea from "./ModalConfirmTarea";
-import { useState } from "react";
 
 const Tarea = ({ tarea }) => {
   //hooks

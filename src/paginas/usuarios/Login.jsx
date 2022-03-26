@@ -33,7 +33,7 @@ const Login = () => {
       } else {
         sessionStorage.setItem("token", data.token);
       }
-      navigate("/clientes");
+      navigate("/proyectos");
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
@@ -101,7 +101,9 @@ const Login = () => {
                   className="mr-2"
                   onChange={handleChange}
                 />
-                <label htmlFor="conectado" className="uppercase text-gray-600">Desea permanecer conectado</label>
+                <label htmlFor="conectado" className="uppercase text-gray-600">
+                  Desea permanecer conectado
+                </label>
               </div>
             </div>
             <input
